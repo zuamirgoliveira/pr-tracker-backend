@@ -17,8 +17,9 @@ public class GitHubPullRequestController {
     @GetMapping("/{owner}/{repo}/pulls")
     public List<PullRequestWithAge> listOpenPullRequests(
             @PathVariable String owner,
-            @PathVariable String repo
+            @PathVariable String repo,
+            @RequestParam(defaultValue = "all") String state
     ) {
-        return service.listOpenPullRequests(owner, repo);
+        return service.listOpenPullRequests(owner, repo, state);
     }
 }

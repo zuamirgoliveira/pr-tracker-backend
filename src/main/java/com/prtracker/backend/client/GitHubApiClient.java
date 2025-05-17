@@ -15,12 +15,13 @@ public class GitHubApiClient {
     @Qualifier("githubWebClient")
     private final WebClient githubWebClient;
 
-    public List<GitHubPullRequestDto> getOpenPullRequests(String owner, String repo) {
+    public List<GitHubPullRequestDto> getPullRequests(String owner, String repo, String state) {
         return githubWebClient.get()
-                .uri("/repos/{owner}/{repo}/pulls?state=open", owner, repo)
+                .uri("/repos/{owner}/{repo}/pulls?state={state}", owner, repo, state)
                 .retrieve()
                 .bodyToFlux(GitHubPullRequestDto.class)
                 .collectList()
                 .block();
     }
+
 }
