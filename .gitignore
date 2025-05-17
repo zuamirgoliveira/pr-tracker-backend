@@ -28,3 +28,6 @@ replay_pid*
 
 # Maven
 target/
+
+# Ignorar o application-local.yaml
+src/main/resources/application-local.yaml

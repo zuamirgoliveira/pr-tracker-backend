@@ -48,6 +48,81 @@ Outras plataformas como GitLab e Azure DevOps poderão ser integradas futurament
 
 ---
 
+## ▶️ How to Run the Project
+
+```bash
+./mvnw spring-boot:run
+```
+
+**Pré-requisitos:**
+- Java 17+
+- Maven (ou use o wrapper incluído)
+
+---
+
+## ⚙️ Configuração local e execução com OAuth2 (GitHub)
+
+Para rodar o projeto localmente com autenticação via GitHub, siga os passos abaixo:
+
+### 1. Crie uma OAuth App no GitHub
+
+Acesse: [https://github.com/settings/developers](https://github.com/settings/developers)
+
+- **Application name**: PR Tracker (ou similar)
+- **Homepage URL**: `http://localhost:8080`
+- **Authorization callback URL**: `http://localhost:8080/login/oauth2/code/github`
+
+Após criar, salve o `Client ID` e `Client Secret`.
+
+---
+
+### 2. Crie o arquivo `application-local.yaml` (não versionado)
+
+Local: `src/main/resources/application-local.yaml`
+
+```yaml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: SUA_CLIENT_ID_AQUI
+            client-secret: SEU_CLIENT_SECRET_AQUI
+            scope: read:user,repo
+            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+            client-name: GitHub
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+```
+
+Adicione esse arquivo ao `.gitignore` para evitar versionamento.
+
+---
+
+### 3. Execute com o perfil `local`
+
+#### Terminal
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+#### IntelliJ IDEA
+1. Vá em: `Run > Edit Configurations`
+2. Em **VM Options**, adicione:
+```
+-Dspring.profiles.active=local
+```
+
+---
+
+Agora a aplicação irá autenticar via GitHub e redirecionar para o endpoint `/api/v1/users/me` com os dados do usuário autenticado.
+
+---
+
 ## 👨‍💻 Author
 
 Desenvolvido por **Zuma Gutem**  
