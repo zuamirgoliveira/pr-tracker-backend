@@ -19,7 +19,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("api/v1/users/me", true)
+                        .defaultSuccessUrl("/api/v1/users/me", true)
                 );
         return http.build();
     }
