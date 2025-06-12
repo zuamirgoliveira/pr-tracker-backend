@@ -18,8 +18,9 @@ public class GitHubPullRequestController {
     public List<PullRequestWithAge> listOpenPullRequests(
             @PathVariable String owner,
             @PathVariable String repo,
-            @RequestParam(defaultValue = "all") String state
+            @RequestParam(defaultValue = "all") String state,
+            @RequestHeader("Authorization") String authorization
     ) {
-        return service.listOpenPullRequests(owner, repo, state);
+        return service.listOpenPullRequests(owner, repo, state, authorization);
     }
 }
