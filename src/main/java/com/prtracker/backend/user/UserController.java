@@ -17,9 +17,9 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<UserDto> getUser(
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader("Authorization") String auth) {
 
-        UserDto user = service.getUser(authHeader);
+        UserDto user = service.getUser(auth);
         return ResponseEntity.ok(user);
     }
 

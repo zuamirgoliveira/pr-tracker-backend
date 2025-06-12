@@ -18,8 +18,8 @@ public class PullRequestController {
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam(defaultValue = "all") String state,
-            @RequestHeader("Authorization") String authorization
+            @RequestHeader("Authorization") String auth
     ) {
-        return service.listPullRequests(owner, repo, state, authorization);
+        return service.listPullRequests(owner, repo, state, auth);
     }
 }
