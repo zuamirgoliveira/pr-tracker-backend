@@ -14,7 +14,7 @@ public class PullRequestService {
 
     private final GitHubApiClient apiClient;
 
-    public List<PullRequestWithAge> listOpenPullRequests(String owner, String repo, String state, String authorization) {
+    public List<PullRequestWithAge> listPullRequests(String owner, String repo, String state, String authorization) {
         List<PullRequestDto> pullRequests = apiClient.getPullRequests(owner, repo, state, authorization);
 
         return pullRequests.stream()

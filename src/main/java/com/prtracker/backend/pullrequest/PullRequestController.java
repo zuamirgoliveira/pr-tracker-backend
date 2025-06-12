@@ -14,12 +14,12 @@ public class PullRequestController {
     private final PullRequestService service;
 
     @GetMapping("/{owner}/{repo}/pulls")
-    public List<PullRequestWithAge> listOpenPullRequests(
+    public List<PullRequestWithAge> listPullRequests(
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam(defaultValue = "all") String state,
             @RequestHeader("Authorization") String authorization
     ) {
-        return service.listOpenPullRequests(owner, repo, state, authorization);
+        return service.listPullRequests(owner, repo, state, authorization);
     }
 }

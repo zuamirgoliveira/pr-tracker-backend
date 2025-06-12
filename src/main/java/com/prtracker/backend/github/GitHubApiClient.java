@@ -26,7 +26,7 @@ public class GitHubApiClient {
                 .block();
     }
 
-    public UserDto fetchCurrentUser(String authHeader) {
+    public UserDto fetchUser(String authHeader) {
         return githubWebClient.get()
                 .uri("/user")
                 .header("Authorization", authHeader)
