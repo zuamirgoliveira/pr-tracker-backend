@@ -1,5 +1,7 @@
 package com.prtracker.backend.github;
 
+import com.prtracker.backend.commit.CommitDto;
+import com.prtracker.backend.commit.CommitsFilter;
 import com.prtracker.backend.pullrequest.PullRequestDto;
 import com.prtracker.backend.repository.RepositoryDto;
 import com.prtracker.backend.repository.RepositoryFilter;
@@ -64,6 +66,29 @@ public class GitHubApiClient {
                 .header("Authorization", auth)
                 .retrieve()
                 .bodyToFlux(RepositoryDto.class);
+    }
+
+    public Flux<CommitDto> fetchCommits(
+            String authHeader,
+            String owner,
+            String repo,
+            CommitsFilter filter
+    ) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/repos/{owner}/{repo}/commits")
+                        .queryParam("sha",       filter.sha())
+                        .queryParam("path",      filter.path())
+                        .queryParam("author",    filter.author())
+                        .queryParam("committer", filter.committer())
+                        .queryParam("since",     filter.since())
+                        .queryParam("until",     filter.until())
+                        .queryParam("per_page",  filter.perPage())
+                        .queryParam("page",      filter.page())
+                        .build(owner, repo))
+                .header("Authorization", authHeader)
+                .retrieve()
+                .bodyToFlux(CommitDto.class);
     }
 
 }
