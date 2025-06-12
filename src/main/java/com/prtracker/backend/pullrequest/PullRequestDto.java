@@ -1,10 +1,10 @@
-package com.prtracker.backend.dto;
+package com.prtracker.backend.pullrequest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
 
-public record GitHubPullRequestDto(
+public record PullRequestDto(
         String title,
         @JsonProperty("html_url") String htmlUrl,
         @JsonProperty("created_at") ZonedDateTime createdAt,

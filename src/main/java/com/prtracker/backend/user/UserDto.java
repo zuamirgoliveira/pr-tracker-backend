@@ -1,6 +1,6 @@
-package com.prtracker.backend.dto;
+package com.prtracker.backend.user;
 
-public record GitHubUserDto(
+public record UserDto(
         String login,
         String name,
         String avatarUrl,

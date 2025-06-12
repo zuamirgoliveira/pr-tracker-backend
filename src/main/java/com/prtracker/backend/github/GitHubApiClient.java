@@ -1,7 +1,7 @@
-package com.prtracker.backend.client;
+package com.prtracker.backend.github;
 
-import com.prtracker.backend.dto.GitHubPullRequestDto;
-import com.prtracker.backend.dto.GitHubUserDto;
+import com.prtracker.backend.pullrequest.PullRequestDto;
+import com.prtracker.backend.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -16,22 +16,22 @@ public class GitHubApiClient {
     @Qualifier("githubWebClient")
     private final WebClient githubWebClient;
 
-    public List<GitHubPullRequestDto> getPullRequests(String owner, String repo, String state, String authorization) {
+    public List<PullRequestDto> getPullRequests(String owner, String repo, String state, String authorization) {
         return githubWebClient.get()
                 .uri("/repos/{owner}/{repo}/pulls?state={state}", owner, repo, state)
                 .header("Authorization", authorization)
                 .retrieve()
-                .bodyToFlux(GitHubPullRequestDto.class)
+                .bodyToFlux(PullRequestDto.class)
                 .collectList()
                 .block();
     }
 
-    public GitHubUserDto fetchCurrentUser(String authHeader) {
+    public UserDto fetchCurrentUser(String authHeader) {
         return githubWebClient.get()
                 .uri("/user")
                 .header("Authorization", authHeader)
                 .retrieve()
-                .bodyToMono(GitHubUserDto.class)
+                .bodyToMono(UserDto.class)
                 .block();
     }
 

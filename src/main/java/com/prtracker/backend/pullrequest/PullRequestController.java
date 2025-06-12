@@ -1,7 +1,6 @@
-package com.prtracker.backend.controller;
+package com.prtracker.backend.pullrequest;
 
-import com.prtracker.backend.service.GitHubPullRequestService;
-import com.prtracker.backend.service.GitHubPullRequestService.PullRequestWithAge;
+import com.prtracker.backend.pullrequest.PullRequestService.PullRequestWithAge;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +9,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/github/repos")
 @RequiredArgsConstructor
-public class GitHubPullRequestController {
+public class PullRequestController {
 
-    private final GitHubPullRequestService service;
+    private final PullRequestService service;
 
     @GetMapping("/{owner}/{repo}/pulls")
     public List<PullRequestWithAge> listOpenPullRequests(

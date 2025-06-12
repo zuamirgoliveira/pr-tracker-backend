@@ -1,7 +1,6 @@
-package com.prtracker.backend.service;
+package com.prtracker.backend.pullrequest;
 
-import com.prtracker.backend.client.GitHubApiClient;
-import com.prtracker.backend.dto.GitHubPullRequestDto;
+import com.prtracker.backend.github.GitHubApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +10,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GitHubPullRequestService {
+public class PullRequestService {
 
     private final GitHubApiClient apiClient;
 
     public List<PullRequestWithAge> listOpenPullRequests(String owner, String repo, String state, String authorization) {
-        List<GitHubPullRequestDto> pullRequests = apiClient.getPullRequests(owner, repo, state, authorization);
+        List<PullRequestDto> pullRequests = apiClient.getPullRequests(owner, repo, state, authorization);
 
         return pullRequests.stream()
                 .map(pr -> new PullRequestWithAge(pr, Duration.between(pr.createdAt(), ZonedDateTime.now()).toHours()))
                 .toList();
     }
 
-    public record PullRequestWithAge(GitHubPullRequestDto pullRequest, long hoursOpen) {}
+    public record PullRequestWithAge(PullRequestDto pullRequest, long hoursOpen) {}
 }
