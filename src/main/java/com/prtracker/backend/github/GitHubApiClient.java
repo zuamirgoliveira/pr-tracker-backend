@@ -1,5 +1,7 @@
 package com.prtracker.backend.github;
 
+import com.prtracker.backend.branch.BranchDto;
+import com.prtracker.backend.branch.BranchFilter;
 import com.prtracker.backend.commit.CommitDto;
 import com.prtracker.backend.commit.CommitsFilter;
 import com.prtracker.backend.pullrequest.PullRequestDto;
@@ -105,5 +107,23 @@ public class GitHubApiClient {
                         .build(username))
                 .retrieve()
                 .bodyToFlux(RepositoryDto.class);
+    }
+
+    public Flux<BranchDto> fetchBranches(
+            String auth,
+            String owner,
+            String repo,
+            BranchFilter filter
+    ) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/repos/{owner}/{repo}/branches")
+                        .queryParam("protected", filter.onlyProtected())
+                        .queryParam("per_page",  filter.perPage())
+                        .queryParam("page",      filter.page())
+                        .build(owner, repo))
+                .header("Authorization", auth)
+                .retrieve()
+                .bodyToFlux(BranchDto.class);
     }
 }
