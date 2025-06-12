@@ -29,4 +29,13 @@ public class RepositoryController {
         var repos = service.listOrgRepos(auth, org, dto);
         return ResponseEntity.ok(repos);
     }
+
+    @GetMapping("/users/{username}/repos")
+    public ResponseEntity<List<RepositoryDto>> publicUserRepos(
+            @PathVariable String username,
+            @ModelAttribute RepositoryFilter filter
+    ) {
+        var repos = service.listPublicRepos(username, filter);
+        return ResponseEntity.ok(repos);
+    }
 }

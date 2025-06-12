@@ -21,4 +21,13 @@ public class RepositoryService {
         return apiClient.fetchOrgRepos(auth, org, filter)
                 .collectList().block();
     }
+
+    public List<RepositoryDto> listPublicRepos(
+            String username,
+            RepositoryFilter filter
+    ) {
+        return apiClient.fetchPublicRepos(username, filter)
+                .collectList()
+                .block();
+    }
 }

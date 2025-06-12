@@ -14,8 +14,8 @@ public class PullRequestService {
 
     private final GitHubApiClient apiClient;
 
-    public List<PullRequestWithAge> listPullRequests(String owner, String repo, String state, String authorization) {
-        List<PullRequestDto> pullRequests = apiClient.getPullRequests(owner, repo, state, authorization);
+    public List<PullRequestWithAge> listPullRequests(String owner, String repo, String state, String auth) {
+        List<PullRequestDto> pullRequests = apiClient.getPullRequests(owner, repo, state, auth);
 
         return pullRequests.stream()
                 .map(pr -> new PullRequestWithAge(pr, Duration.between(pr.createdAt(), ZonedDateTime.now()).toHours()))

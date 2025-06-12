@@ -21,20 +21,20 @@ public class GitHubApiClient {
     @Qualifier("githubWebClient")
     private final WebClient webClient;
 
-    public List<PullRequestDto> getPullRequests(String owner, String repo, String state, String authorization) {
+    public List<PullRequestDto> getPullRequests(String owner, String repo, String state, String auth) {
         return webClient.get()
                 .uri("/repos/{owner}/{repo}/pulls?state={state}", owner, repo, state)
-                .header("Authorization", authorization)
+                .header("Authorization", auth)
                 .retrieve()
                 .bodyToFlux(PullRequestDto.class)
                 .collectList()
                 .block();
     }
 
-    public UserDto fetchUser(String authHeader) {
+    public UserDto fetchUser(String auth) {
         return webClient.get()
                 .uri("/user")
-                .header("Authorization", authHeader)
+                .header("Authorization", auth)
                 .retrieve()
                 .bodyToMono(UserDto.class)
                 .block();
@@ -69,7 +69,7 @@ public class GitHubApiClient {
     }
 
     public Flux<CommitDto> fetchCommits(
-            String authHeader,
+            String auth,
             String owner,
             String repo,
             CommitsFilter filter
@@ -86,9 +86,24 @@ public class GitHubApiClient {
                         .queryParam("per_page",  filter.perPage())
                         .queryParam("page",      filter.page())
                         .build(owner, repo))
-                .header("Authorization", authHeader)
+                .header("Authorization", auth)
                 .retrieve()
                 .bodyToFlux(CommitDto.class);
     }
 
+    public Flux<RepositoryDto> fetchPublicRepos(
+            String username,
+            RepositoryFilter filter
+    ) {
+        return webClient.get()
+                .uri(u -> u.path("/users/{username}/repos")
+                        .queryParam("type",      filter.type())
+                        .queryParam("sort",      filter.sort())
+                        .queryParam("direction", filter.direction())
+                        .queryParam("per_page",  filter.perPage())
+                        .queryParam("page",      filter.page())
+                        .build(username))
+                .retrieve()
+                .bodyToFlux(RepositoryDto.class);
+    }
 }
