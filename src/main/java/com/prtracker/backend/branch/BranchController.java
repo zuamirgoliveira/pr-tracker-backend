@@ -2,6 +2,7 @@ package com.prtracker.backend.branch;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class BranchController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable String owner,
             @PathVariable String repo,
-            @ModelAttribute BranchFilter filter
+            @Validated @ModelAttribute BranchFilter filter
     ) {
         List<BranchDto> branches =
                 service.listBranches(authHeader, owner, repo, filter);

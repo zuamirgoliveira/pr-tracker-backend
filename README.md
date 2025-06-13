@@ -1,49 +1,47 @@
 # PR Tracker Backend
 
-Backend do projeto PR Tracker — um Micro-SaaS leve e direto ao ponto para monitorar Pull Requests no GitHub em tempo real.
+Backend do projeto **PR Tracker** — um microserviço leve e direto ao ponto para monitorar Pull Requests no GitHub em tempo real.
 
 ---
 
 ## 🧠 Overview
 
-O PR Tracker é um microserviço que atua como proxy entre o BFF (ou frontend) e a GitHub API, entregando **visibilidade em tempo real** sobre o fluxo de Pull Requests das squads.
+O PR Tracker Backend é uma API REST **stateless** que atua como proxy entre o BFF/frontend e a GitHub API, entregando:
 
-Através de uma API REST simples, buscamos fornecer:
+* **Visibilidade em tempo real** sobre Pull Requests, commits e branches
+* **Métricas de revisão**: tempo médio aberto, PRs estagnados
+* **Filtros avançados** (GitHub-native e custom)
+* **Comparação de branches** com a `main`
 
-* Métricas de revisão (tempo médio, PRs estagnados)
-* Alertas de gargalos via filtros de tempo
-* Insights de fluxo contínuo
-* Listagem de repositórios do usuário autenticado
-
-Tudo isso **sem banco de dados local** — 100% orientado por integração direta com a GitHub API.
+Não há banco de dados local — todos os dados vêm diretamente da GitHub API.
 
 ---
 
 ## 🎯 Objetivo do MVP
 
-Nesta primeira versão, o PR Tracker Backend deve:
-
-1. **Autenticar o usuário** via GitHub (OAuth2 Client)
-2. **Expor `/api/v1/user`** para devolver dados do usuário autenticado
-3. **Expor `/api/v1/user/repos`** para listar repositórios do usuário autenticado
-4. **Expor `/api/v1/repos/{owner}/{repo}/pulls`** para listar Pull Requests de um repositório específico
-
-    * Suportar filtros GitHub-native (`state`, `head`, `base`, `sort`, `direction`, `draft`, `since`)
-    * Suportar filtros custom (`minHoursOpen`, `maxHoursOpen`, `author`, `label`)
-5. **Calcular e retornar** para cada PR: título, URL, autor, data de criação e tempo aberto
-6. **Manter o sistema stateless** — todo token GitHub vem via header `Authorization: Bearer <token>`
+1. **Autenticar** usuário via GitHub (OAuth2 Client) ou Personal Access Token
+2. **Expor** `GET /api/v1/user` → dados do usuário autenticado
+3. **Expor** `GET /api/v1/user/repos` e `GET /api/v1/orgs/{org}/repos` → listar repositórios
+4. **Expor** `GET /api/v1/repos/{owner}/{repo}/pulls` → listar Pull Requests
+5. **Expor** `GET /api/v1/repos/{owner}/{repo}/commits` → listar commits
+6. **Expor** `GET /api/v1/repos/{owner}/{repo}/branches` → listar branches
+7. **Calcular e retornar** para cada PR: título, URL, autor, data de criação e tempo aberto
+8. **Manter o sistema stateless**: todo token GitHub chega via header `Authorization: Bearer <token>`
 
 ---
 
 ## 📦 Endpoints Disponíveis
 
-| Método           | Rota                                              | Descrição                                                                               |
-| ---------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| GET              | `/api/v1/user`                                    | Dados do usuário autenticado (login, nome, avatar, email)                               |
-| GET              | `/api/v1/user/repos`                              | Lista repositórios do usuário (filtros: `type`, `sort`, `direction`, `perPage`, `page`) |
-| GET              | `/api/v1/orgs/{org}/repos`                        | Lista repositórios de uma organização                                                   |
-| GET              | `/api/v1/repos/{owner}/{repo}/pulls`              | Lista Pull Requests de um repo com todos os filtros mencionados                         |
-| (filtros custom) | `minHoursOpen`, `maxHoursOpen`, `author`, `label` | Aplicados após o fetch da GitHub API                                                    |
+| Método  | Rota                                    | Descrição                                                                                                                                                |
+| ------- |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **GET** | `/api/v1/user`                          | Dados do usuário autenticado (`login`, `name`, `avatarUrl`, `email`)                                                                                     |
+| **GET** | `/api/v1/user/repos`                    | Repositórios do usuário autenticado (filtros: `type`, `sort`, `direction`, `perPage`, `page`)                                                            |
+| **GET** | `/api/v1/users/{username}/repos`        | Repositórios públicos por usuário (filtros: `type`, `sort`, `direction`, `perPage`, `page`)                                                              |
+| **GET** | `/api/v1/orgs/{org}/repos`              | Repositórios de uma organização (mesmos filtros acima)                                                                                                   |
+| **GET** | `/api/v1/repos/{owner}/{repo}/pulls`    | Pull Requests (GitHub-native: `state`, `head`, `base`, `sort`, `direction`, `draft`, `since`; custom: `minHoursOpen`, `maxHoursOpen`, `author`, `label`) |
+| **GET** | `/api/v1/repos/{owner}/{repo}/commits`  | Commits (filtros: `sha`, `path`, `author`, `committer`, `since`, `until`, `perPage`, `page`)                                                             |
+| **GET** | `/api/v1/repos/{owner}/{repo}/branches` | Branches (filtros: `protected`, `perPage`, `page`)                                                                                                       |
+
 
 ---
 
@@ -52,49 +50,42 @@ Nesta primeira versão, o PR Tracker Backend deve:
 * **Java 17**
 * **Spring Boot 3.4.5**
 * **Maven** (com Maven Wrapper)
-* **Spring Web & WebClient**
-* **Spring Security** (OAuth2 Client)
-* **Lombok** (para código mais enxuto)
+* **Spring Web MVC & WebClient (WebFlux)**
+* **Spring Security** (OAuth2 Client / Resource Server)
+* **Spring Validation** (`spring-boot-starter-validation`)
+* **Spring Actuator** (`spring-boot-starter-actuator`)
+* **springdoc-openapi-starter-webmvc-ui**
+* **Lombok**
 
 ---
 
 ## ▶️ Como Rodar o Projeto
 
-1. Clone o repositório e entre na pasta:
+1. Clone o repositório:
 
    ```bash
    git clone https://github.com/seu-org/pr-tracker-backend.git
    cd pr-tracker-backend
    ```
-
-2. Execute com Maven Wrapper:
+2. Execute com o Maven Wrapper e perfil `local`:
 
    ```bash
    ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
    ```
 
-**Pré-requisitos**
-
-* Java 17+
-* (Opcional) Maven — mas você pode usar o wrapper incluído
+**Pré-requisitos:** Java 17+ (use o wrapper para o Maven)
 
 ---
 
 ## ⚙️ Configuração Local e OAuth2 (GitHub)
 
-### 1. Registre um OAuth App no GitHub
+1. Registre um OAuth App em GitHub:
 
-Acesse: [https://github.com/settings/developers](https://github.com/settings/developers)
+    * **Application name**: PR Tracker Backend
+    * **Homepage URL**: `http://localhost:8080`
+    * **Authorization callback URL**: `http://localhost:8080/login/oauth2/code/github`
 
-* **Application name**: PR Tracker Backend
-* **Homepage URL**: `http://localhost:8080`
-* **Authorization callback URL**: `http://localhost:8080/login/oauth2/code/github`
-
-Anote o **Client ID** e o **Client Secret**.
-
-### 2. Crie `application-local.yaml` (não versionado)
-
-Em `src/main/resources/application-local.yaml`:
+2. Crie `src/main/resources/application-local.yaml` (não versionado):
 
 ```yaml
 spring:
@@ -107,72 +98,63 @@ spring:
             client-secret: SEU_CLIENT_SECRET_AQUI
             scope:         read:user,repo
             redirect-uri:  "{baseUrl}/login/oauth2/code/github"
-            client-name:   GitHub
         provider:
           github:
-            authorization-uri:  https://github.com/login/oauth/authorize
-            token-uri:          https://github.com/login/oauth/access_token
-            user-info-uri:      https://api.github.com/user
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri:         https://api.github.com/login/oauth/access_token
+            user-info-uri:     https://api.github.com/user
 server:
   port: 8080
 ```
 
-> Adicione este arquivo ao `.gitignore` para não comitar credenciais.
-
-### 3. Ative o perfil `local`
-
-* **Terminal**:
-
-  ```bash
-  ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-  ```
-* **IntelliJ IDEA**:
-  Em **Run > Edit Configurations**, adicionar em **VM Options**:
-
-  ```
-  -Dspring.profiles.active=local
-  ```
+> **IMPORTANTE:** adicione ao `.gitignore`.
 
 ---
 
 ## 🏗️ Estrutura de Pastas
 
-```
+```text
 src/main/java/com/prtracker/backend
-│
-├── PrTrackerBackendApplication.java
-│
+├── BackendApplication.java
 ├── config/
 │   ├── SecurityConfig.java
 │   └── GitHubWebClientConfig.java
-│
 ├── exception/
 │   ├── ErrorDto.java
 │   └── GlobalExceptionHandler.java
-│
 ├── github/
 │   └── GitHubApiClient.java
-│
 ├── user/
-│   ├── UserController.java      // GET /api/v1/user
+│   ├── UserController.java
 │   ├── UserService.java
 │   └── UserDto.java
-│
 ├── repository/
-│   ├── RepositoryController.java   // /user/repos, /orgs/{org}/repos
+│   ├── RepositoryController.java
 │   ├── RepositoryService.java
-│   ├── RepositoryFilter.java       // record de query-params
-│   └── RepositoryDto.java          // record de resposta do GitHub
-│
+│   ├── RepositoryFilter.java
+│   └── RepositoryDto.java
 ├── pullrequest/
-│   ├── PullRequestController.java  // GET /api/v1/repos/{owner}/{repo}/pulls
+│   ├── PullRequestController.java
 │   ├── PullRequestService.java
-│   ├── PullRequestFilter.java      // record de query-params custom
-│   └── PullRequestDto.java         // record de resposta do GitHub
-│
-└── resources/
-    ├── application.yaml
-    └── application-local.yaml
+│   ├── PullRequestFilter.java
+│   └── PullRequestDto.java
+├── commit/
+│   ├── CommitController.java
+│   ├── CommitService.java
+│   ├── CommitsFilter.java
+│   ├── CommitAuthor.java
+│   ├── CommitInfo.java
+│   ├── GitHUbUser.java
+│   └── CommitDto.java
+└── branch/
+    ├── BranchController.java
+    ├── BranchService.java
+    ├── BranchFilter.java
+    └── BranchDto.java
+
+resources/
+├── application.yaml
+└── application-local.yaml
 ```
 
 ---
