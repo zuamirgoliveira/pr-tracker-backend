@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GitHubWebClientConfig {
 
     @Bean
-    public WebClient githubWebClient(OAuth2AuthorizedClientManager manager) {
+    public WebClient githubWebClient() {
         return WebClient.builder()
                 .baseUrl("https://api.github.com")
                 .build();

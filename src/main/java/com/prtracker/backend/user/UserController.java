@@ -1,6 +1,5 @@
 package com.prtracker.backend.user;
 
-import com.prtracker.backend.github.GitHubApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<UserDto> getUser(
             @RequestHeader("Authorization") String auth) {
-
-        UserDto user = service.fetchCurrentUser(auth);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(service.fetchCurrentUser(auth));
     }
 
 }
