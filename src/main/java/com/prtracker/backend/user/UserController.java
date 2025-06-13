@@ -19,7 +19,7 @@ public class UserController {
     public ResponseEntity<UserDto> getUser(
             @RequestHeader("Authorization") String auth) {
 
-        UserDto user = service.getUser(auth);
+        UserDto user = service.fetchCurrentUser(auth);
         return ResponseEntity.ok(user);
     }
 

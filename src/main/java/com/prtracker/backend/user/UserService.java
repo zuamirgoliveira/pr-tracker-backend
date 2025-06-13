@@ -11,7 +11,7 @@ public class UserService {
 
     private final GitHubApiClient apiClient;
 
-    public UserDto getUser(String authHeader) {
+    public UserDto fetchCurrentUser(String authHeader) {
         return apiClient.fetchUser(authHeader);
     }
 
