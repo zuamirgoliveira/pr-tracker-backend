@@ -3,6 +3,7 @@ package com.prtracker.backend.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -10,6 +11,15 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorDto> handleMissingHeader(MissingRequestHeaderException ex) {
+        logger.warn("Missing header: {}", ex.getHeaderName());
+        ErrorDto error = new ErrorDto(400, "Required header '" + ex.getHeaderName() + "' is missing");
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+    }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ErrorDto> handleWebClientResponseException(WebClientResponseException ex) {
