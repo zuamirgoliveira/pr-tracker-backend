@@ -28,6 +28,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "actions@github.com"
 
+      - name: Rewrite remote to HTTPS + token
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
       - name: Perform Maven release
         run: mvn -B release:prepare release:perform
         env:
