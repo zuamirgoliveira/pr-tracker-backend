@@ -21,10 +21,11 @@
 		<developer/>
 	</developers>
 	<scm>
-		<connection>scm:git:git://github.com/zuamirgoliveira/pr-tracker-backend.git</connection>
-		<developerConnection>scm:git:ssh://github.com/zuamirgoliveira/pr-tracker-backend.git</developerConnection>
-		<url>https://github.com/zuamirgoliveira/pr-tracker-backend</url>
+		<connection>scm:git:https://github.com/seu-org/pr-tracker-backend.git</connection>
+		<developerConnection>scm:git:https://github.com/seu-org/pr-tracker-backend.git</developerConnection>
+		<url>https://github.com/seu-org/pr-tracker-backend</url>
 	</scm>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
