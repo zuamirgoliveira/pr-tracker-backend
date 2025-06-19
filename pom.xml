@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.prtracker</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>backend</name>
 	<description>Backend API for tracking GitHub pull requests</description>
 	<url />
@@ -23,7 +23,7 @@
 		<connection>scm:git:https://github.com/zuamirgoliveira/pr-tracker-backend.git</connection>
 		<developerConnection>scm:git:https://github.com/zuamirgoliveira/pr-tracker-backend.git</developerConnection>
 		<url>https://github.com/zuamirgoliveira/pr-tracker-backend</url>
-	  <tag>backend-0.0.1</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<properties>
