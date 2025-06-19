@@ -33,7 +33,7 @@ Não há banco de dados local — todos os dados vêm diretamente da GitHub API.
 ## 📦 Endpoints Disponíveis
 
 | Método  | Rota                                    | Descrição                                                                                                                                                |
-| ------- |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GET** | `/api/v1/user`                          | Dados do usuário autenticado (`login`, `name`, `avatarUrl`, `email`)                                                                                     |
 | **GET** | `/api/v1/user/repos`                    | Repositórios do usuário autenticado (filtros: `type`, `sort`, `direction`, `perPage`, `page`)                                                            |
 | **GET** | `/api/v1/users/{username}/repos`        | Repositórios públicos por usuário (filtros: `type`, `sort`, `direction`, `perPage`, `page`)                                                              |
@@ -41,7 +41,6 @@ Não há banco de dados local — todos os dados vêm diretamente da GitHub API.
 | **GET** | `/api/v1/repos/{owner}/{repo}/pulls`    | Pull Requests (GitHub-native: `state`, `head`, `base`, `sort`, `direction`, `draft`, `since`; custom: `minHoursOpen`, `maxHoursOpen`, `author`, `label`) |
 | **GET** | `/api/v1/repos/{owner}/{repo}/commits`  | Commits (filtros: `sha`, `path`, `author`, `committer`, `since`, `until`, `perPage`, `page`)                                                             |
 | **GET** | `/api/v1/repos/{owner}/{repo}/branches` | Branches (filtros: `protected`, `perPage`, `page`)                                                                                                       |
-
 
 ---
 
@@ -81,9 +80,9 @@ Não há banco de dados local — todos os dados vêm diretamente da GitHub API.
 
 1. Registre um OAuth App em GitHub:
 
-    * **Application name**: PR Tracker Backend
-    * **Homepage URL**: `http://localhost:8080`
-    * **Authorization callback URL**: `http://localhost:8080/login/oauth2/code/github`
+   * **Application name**: PR Tracker Backend
+   * **Homepage URL**: `http://localhost:8080`
+   * **Authorization callback URL**: `http://localhost:8080/login/oauth2/code/github`
 
 2. Crie `src/main/resources/application-local.yaml` (não versionado):
 
@@ -142,9 +141,6 @@ src/main/java/com/prtracker/backend
 │   ├── CommitController.java
 │   ├── CommitService.java
 │   ├── CommitsFilter.java
-│   ├── CommitAuthor.java
-│   ├── CommitInfo.java
-│   ├── GitHUbUser.java
 │   └── CommitDto.java
 └── branch/
     ├── BranchController.java
@@ -156,6 +152,70 @@ resources/
 ├── application.yaml
 └── application-local.yaml
 ```
+
+---
+
+## 📋 Testes e Cobertura
+
+* Implementados testes unitários e de slice (controllers) cobrindo **100%** das classes.
+* **JaCoCo** configurado para mínimo de **90%** de cobertura de linhas durante o build Maven.
+
+```xml
+<!-- jacoco-maven-plugin no pom.xml -->
+<plugin>
+  <groupId>org.jacoco</groupId>
+  <artifactId>jacoco-maven-plugin</artifactId>
+  <version>0.8.10</version>
+  <executions>
+    <execution><goals><goal>prepare-agent</goal></goals></execution>
+    <execution><id>report</id><phase>verify</phase><goals><goal>report</goal></goals></execution>
+    <execution><id>check</id><goals><goal>check</goal></goals>
+      <configuration>
+        <rules>
+          <rule>
+            <element>BUNDLE</element>
+            <limits>
+              <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+            </limits>
+          </rule>
+        </rules>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+---
+
+## 🐳 Docker
+
+### Dockerfile (multi-stage com Ubuntu)
+
+**Build da imagem**:
+
+```bash
+docker build --no-cache -t pr-tracker-backend:local .
+```
+
+**Rodar o container**:
+
+```bash
+docker run --rm -d -p 8080:8080 --name pr-tracker-backend pr-tracker-backend:local
+```
+
+**Health check**:
+
+```bash
+curl -i http://localhost:8080/actuator/health
+```
+
+> **Dica:** use `hadolint Dockerfile` para lint e `docker scan pr-tracker-backend:local` ou `trivy` para vulnerabilidades.
+
+---
+
+## 🔄 CI com GitHub Actions
+
+Arquivo: `.github/workflows/ci.yml`
 
 ---
 
