@@ -21,9 +21,9 @@
 		<developer/>
 	</developers>
 	<scm>
-		<connection>scm:git:https://github.com/seu-org/pr-tracker-backend.git</connection>
-		<developerConnection>scm:git:https://github.com/seu-org/pr-tracker-backend.git</developerConnection>
-		<url>https://github.com/seu-org/pr-tracker-backend</url>
+		<connection>scm:git:https://github.com/zuamirgoliveira/pr-tracker-backend.git</connection>
+		<developerConnection>scm:git:https://github.com/zuamirgoliveira/pr-tracker-backend.git</developerConnection>
+		<url>https://github.com/zuamirgoliveira/pr-tracker-backend</url>
 	</scm>
 
 	<properties>
